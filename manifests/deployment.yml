@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: jeonbeomguspipelinesjavascriptdocker 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jeonbeomguspipelinesjavascriptdocker
+  template:
+    metadata:
+      labels:
+        app: jeonbeomguspipelinesjavascriptdocker 
+    spec:
+      containers:
+        - name: jeonbeomguspipelinesjavascriptdocker 
+          image: beomgucontainerregistry.azurecr.io/jeonbeomguspipelinesjavascriptdocker
+          ports:
+          - containerPort: 8080
