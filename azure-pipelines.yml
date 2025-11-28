@@ -48,7 +48,7 @@ stages:
         echo "Build and push multi-platform image"
         docker buildx build --platform linux/amd64,linux/arm64 \
           -t $(containerRegistry)/$(imageRepository):$(tag) \
-          -f $(dockerfilePath) \
+          -f $(Build.SourcesDirectory)/Dockerfile \
           --push \
           $(Build.SourcesDirectory)
       displayName: 'Build and push multi-platform Docker image'
