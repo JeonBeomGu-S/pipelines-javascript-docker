@@ -39,15 +39,28 @@ stages:
         echo "Ensure Docker is installed and running"
         docker --version
       displayName: 'Verify Docker'
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+
+    - script: |
+        echo "Ensure Docker Buildx is set up"
+        docker buildx create --use
+        docker buildx inspect --bootstrap
+
+        echo "Build and push multi-platform image"
+        docker buildx build --platform linux/amd64,linux/arm64 \
+          -t $(containerRegistry)/$(imageRepository):$(tag) \
+          -f $(dockerfilePath) \
+          --push .
+      displayName: 'Build and push multi-platform Docker image'
+
+    # - task: Docker@2
+    #   displayName: Build and push an image to container registry
+    #   inputs:
+    #     command: buildAndPush
+    #     repository: $(imageRepository)
+    #     dockerfile: $(dockerfilePath)
+    #     containerRegistry: $(dockerRegistryServiceConnection)
+    #     tags: |
+    #       $(tag)
 
     - upload: manifests
       artifact: manifests
